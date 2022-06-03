@@ -40,25 +40,60 @@ func main() {
 }
 
 func init() {
+	var dbConnString string
+
 	if err := godotenv.Load(); err != nil {
+
 		new_port, exists := os.LookupEnv("PORT")
 		if exists {
 			port = new_port
 		} else {
-			log.Fatal(err.Error(), ": no port")
+			log.Fatal(err.Error(), ": not found PORT")
 			return
 		}
+
+		db_host, exists := os.LookupEnv("DBHOST")
+		if !exists {
+			log.Fatal(err.Error(), ": not found DBHOST")
+			return
+		}
+
+		db_port, exists := os.LookupEnv("DBPORT")
+		if !exists {
+			log.Fatal(err.Error(), ": not found DBPORT")
+			return
+		}
+
+		db_user, exists := os.LookupEnv("DBUSER")
+		if !exists {
+			log.Fatal(err.Error(), ": not found DBUSER")
+			return
+		}
+
+		db_name, exists := os.LookupEnv("DBNAME")
+		if !exists {
+			log.Fatal(err.Error(), ": not found DBNAME")
+			return
+		}
+
+		db_pass, exists := os.LookupEnv("DBPASSWORD")
+		if !exists {
+			log.Fatal(err.Error(), ": not found DBPASSWORD")
+			return
+		}
+
+		dbConnString = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", db_host, db_port, db_user, db_name, db_pass)
 	} else {
 		port = os.Getenv("PORT")
-	}
 
-	dbConnString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
-		os.Getenv("DBHOST"),
-		os.Getenv("DBPORT"),
-		os.Getenv("DBUSER"),
-		os.Getenv("DBNAME"),
-		os.Getenv("DBPASSWORD"),
-	)
+		dbConnString = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
+			os.Getenv("DBHOST"),
+			os.Getenv("DBPORT"),
+			os.Getenv("DBUSER"),
+			os.Getenv("DBNAME"),
+			os.Getenv("DBPASSWORD"),
+		)
+	}
 
 	db1, err := sqlx.Open("postgres", dbConnString)
 	if err != nil {
