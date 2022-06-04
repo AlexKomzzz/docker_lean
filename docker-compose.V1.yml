@@ -11,7 +11,13 @@ services:
       - 8080:8080
     networks:
       - mynet
-    env_file: .env
+    environment:
+      - PORT=${PORT:-':8080'}
+      - DBHOST=${DBHOST:-db} 
+      - DBPORT=${DBPORT:-5432} 
+      - DBUSER=${DBUSER:-postgres} 
+      - DBNAME=${DBNAME:-postgres} 
+      - DBPASSWORD=${DBPASSWORD:?databasepassword not set}
     deploy:
       restart_policy:
         condition: on-failure

@@ -5,7 +5,10 @@ docker run --name db -dp 5432:5432 -e POSTGRES_PASSWORD='qwerty' --rm -v roach:/
 
 --name db установит нам хост 'db'
 
-войти в оболочку postgres: docker exec -it db /bin/bash
+    войти в оболочку postgres: 
+docker exec -it db /bin/bash
+psql -U postgres
+create table cars (model varchar(255), price int);
 
 
 ## 2. Dockerfile.multi - образ мгногоэтапной сборки.
@@ -25,7 +28,7 @@ gcr.io/distroless/base-debian11 - образ докера без дистриб�
   - ./b.env
 
   build использовать как
-    - build: ./
-    - build:
+    - build: ./                (тогда для контейнера будет использоваться Dockerfile)
+    - build:                (а здесь для контейнера будет использоваться Dockerfile.multi)
         context: .
             dockerfile: Dockerfile.multi

@@ -28,12 +28,19 @@ func main() {
 	DB := Database{dbs: db}
 	defer db.Close()
 
+	if err := DB.CreateDB(); err != nil {
+		log.Fatal(err.Error(), " Error create table")
+	}
+	if err := DB.dbs.Ping(); err != nil {
+		log.Fatal(err.Error(), " Error connect")
+		return
+	}
 	mux := gin.Default()
 
 	mux.GET("/car", DB.GetCar)
 	mux.POST("/newcar", DB.CreateCar)
+	mux.GET("/car/del", DB.DropDB)
 
-	//if err := mux.Run(port); err != nil {
 	if err := mux.Run(port); err != nil {
 		log.Fatal(err.Error())
 	}
@@ -116,6 +123,8 @@ func (d *Database) selectDB() ([]Car, error) {
 }
 
 func (d *Database) GetCar(c *gin.Context) {
+	log.Println("Start GET")
+	log.Print("Start GET")
 	car, err := d.selectDB()
 	if err != nil {
 		log.Fatal("error: select ", err.Error())
@@ -146,4 +155,22 @@ func (d *Database) CreateCar(c *gin.Context) {
 		})
 		return
 	}
+}
+
+func (d *Database) DropDB(c *gin.Context) {
+	stmt := "DROP TABLE cars"
+	_, err := d.dbs.Exec(stmt)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		log.Fatal(err.Error(), " Error drop table")
+	}
+}
+
+func (d *Database) CreateDB() error {
+	stmt := "create table cars (model varchar(255), price int)"
+	_, err := d.dbs.Exec(stmt)
+
+	return err
 }
