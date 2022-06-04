@@ -33,6 +33,7 @@ func main() {
 	mux.GET("/car", DB.GetCar)
 	mux.POST("/newcar", DB.CreateCar)
 
+	//if err := mux.Run(port); err != nil {
 	if err := mux.Run(port); err != nil {
 		log.Fatal(err.Error())
 	}

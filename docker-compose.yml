@@ -1,0 +1,46 @@
+
+services:
+  api:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile.multi
+    container_name: apidb
+    hostname: apidb
+    ports:
+      - 8080:8080
+    networks:
+      - mynet
+    environment:
+      - PORT=${PORT:-':8080'}
+      - DBHOST=${DBHOST:-db} 
+      - DBPORT=${DBPORT:-5432} 
+      - DBUSER=${DBUSER:-postgres} 
+      - DBNAME=${DBNAME:-postgres} 
+      - DBPASSWORD=${DBPASSWORD:?databasepassword not set}
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  db:
+    image: postgres
+    restart: always
+    container_name: db
+    hostname: db
+    ports:
+      - 5432:5432
+      - 8081:8080
+    networks:
+      - mynet
+    volumes:
+      - roach:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-qwerty}
+
+volumes:
+  roach:
+
+networks:
+  mynet:
+    driver: bridge
