@@ -26,20 +26,21 @@ gcr.io/distroless/base-debian11 - образ докера без дистриб�
 
 
 ## 3. Docker-compose
-###docker-compose.yml 
+docker-compose.yml 
 В качестве сборки берется Dockerfile.multi, а не Dockerfile
-    build:
-      context: .
-      dockerfile: Dockerfile.multi
+    $ build:
+        context: .
+            dockerfile: Dockerfile.multi
 
 Запуск зависит от контейнера db
-        depends_on:
-                - db
+
+    $ depends_on:
+              - db
 
 Значения среды окружения берутся из файла .env
-        env_file: .env
-        
 
+       $ env_file: .env
+     
 
 Команда:
 
