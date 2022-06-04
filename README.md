@@ -6,7 +6,7 @@
 
 --name db установит нам хост 'db'
 
-войти в оболочку postgres: 
+Создать таблицу в postgres: 
 
     $ docker exec -it db /bin/bash
     $ psql -U postgres
@@ -14,11 +14,11 @@
 
 
 ## 2. Dockerfile.multi - образ мгногоэтапной сборки.
-команда для создания образа: 
+Команда для создания образа: 
 
     $ docker build -f Dockerfile.multi -t <name_image> .  
 
-команда запуска контейнера: 
+Команда запуска контейнера: 
 
     $ docker run -it --rm -dp 8080:8080 --network mynet --name apidb -e PORT=':8080' -e DBHOST=db -e DBPORT=5432 -e DBUSER=postgres -e DBNAME=postgres -e DBPASSWORD=qwerty  <name_image>
 
@@ -26,15 +26,23 @@ gcr.io/distroless/base-debian11 - образ докера без дистриб�
 
 
 ## 3. Docker-compose
+###docker-compose.yml 
+В качестве сборки берется Dockerfile.multi, а не Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile.multi
 
-команды docker compose: https://docs.docker.com/compose/compose-file/
+Запуск зависит от контейнера db
+        depends_on:
+                - db
 
-использовать environment или env_file:
-  - ./a.env
-  - ./b.env
+Значения среды окружения берутся из файла .env
+        env_file: .env
+        
 
-  build использовать как
-    - build: ./                (тогда для контейнера будет использоваться Dockerfile)
-    - build:                (а здесь для контейнера будет использоваться Dockerfile.multi)
-        context: .
-            dockerfile: Dockerfile.multi
+
+Команда:
+
+    $ docker compose up
+
+Команды docker compose: https://docs.docker.com/compose/compose-file/
