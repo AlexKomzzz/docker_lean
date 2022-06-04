@@ -27,7 +27,9 @@ gcr.io/distroless/base-debian11 - образ докера без дистриб�
 
 ## 3. Docker-compose
 docker-compose.yml 
+
 В качестве сборки берется Dockerfile.multi, а не Dockerfile
+
     $ build:
         context: .
             dockerfile: Dockerfile.multi
