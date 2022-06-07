@@ -27,7 +27,3 @@ services:
 
 volumes:
   roach:
-
-networks:
-  mynet:
-    driver: bridge
