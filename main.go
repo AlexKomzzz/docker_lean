@@ -28,9 +28,9 @@ func main() {
 	DB := Database{dbs: db}
 	defer db.Close()
 
-	if err := DB.CreateDB(); err != nil {
+	/*	if err := DB.CreateDB(); err != nil {
 		log.Fatal(err.Error(), " Error create table")
-	}
+	}*/
 	if err := DB.dbs.Ping(); err != nil {
 		log.Fatal(err.Error(), " Error connect")
 		return
